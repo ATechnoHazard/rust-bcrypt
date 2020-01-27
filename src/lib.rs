@@ -1,5 +1,5 @@
 //! Easily hash and verify passwords using bcrypt
-use rand::{rngs::OsRng, RngCore};
+use getrandom;
 use std::convert::AsRef;
 use std::fmt;
 
@@ -140,7 +140,7 @@ pub fn hash<P: AsRef<[u8]>>(password: P, cost: u32) -> BcryptResult<String> {
 pub fn hash_with_result<P: AsRef<[u8]>>(password: P, cost: u32) -> BcryptResult<HashParts> {
     let salt = {
         let mut s = [0u8; 16];
-        OsRng.fill_bytes(&mut s);
+        getrandom::getrandom(&mut s).expect("An error occurred");
         s
     };
 
